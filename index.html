@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="iagentz.ai — autonomous AI agents that revolutionize how intelligence is consumed. Self-orchestrating agent swarms for research, building, and decision-making." />
+  <title>iagentz.ai — The Agentic Layer for Everything</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated aurora / mesh background -->
+  <div class="bg-aurora" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+    <span class="blob blob-4"></span>
+    <div class="grid-overlay"></div>
+    <div class="noise"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="nav-wrap">
+    <nav class="nav glass">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">iagentz<span class="brand-dot">.ai</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#products">Products</a>
+        <a href="#swarm">The Swarm</a>
+        <a href="#platform">Platform</a>
+        <a href="#manifesto">Manifesto</a>
+      </div>
+      <a href="#cta" class="btn btn-glass nav-cta">Request Access</a>
+      <button class="nav-toggle" aria-label="Toggle menu">≡</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="pill glass">
+          <span class="pulse-dot"></span>
+          Live agent swarm · v0.9 preview
+        </div>
+        <h1>
+          AI agents that
+          <span class="grad-text">work as a team.</span>
+        </h1>
+        <p class="lede">
+          iagentz builds systems of specialized AI agents that plan, research, build,
+          and review together — coordinating on their own instead of waiting for the
+          next prompt. <em>Intelligence you delegate to, not a chatbox you operate.</em>
+        </p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn btn-primary">Request early access</a>
+          <a href="#swarm" class="btn btn-ghost">
+            See how it works
+            <span class="arrow">→</span>
+          </a>
+        </div>
+        <div class="trust-row">
+          <span>Works with the tools your team already uses</span>
+          <div class="logos">
+            <span class="logo-chip">GitHub</span>
+            <span class="logo-chip">Slack</span>
+            <span class="logo-chip">Linear</span>
+            <span class="logo-chip">Notion</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live 3D agent swarm — real bots communicating -->
+      <div class="hero-visual">
+        <div class="swarm-stage glass">
+          <div class="stage-header">
+            <span class="stage-title">orchestrator · live</span>
+            <span class="stage-status"><span class="pulse-dot green"></span> 5 agents online</span>
+          </div>
+          <div class="swarm-3d" id="swarm-3d">
+            <div class="swarm-scene" id="swarm-scene">
+              <canvas id="swarm-canvas"></canvas>
+              <div class="bot-pod core" data-id="orchestrator">
+                <div class="pod-inner">
+                  <span class="pod-ring"></span>
+                  <span class="pod-glow"></span>
+                  <span class="pod-disc"><img src="assets/agents/orchestrator.png" alt="Orchestrator agent" /></span>
+                  <span class="pod-shadow"></span>
+                </div>
+                <span class="pod-name">Orchestrator</span>
+              </div>
+              <div class="bot-pod" data-id="planner">
+                <div class="pod-inner">
+                  <span class="pod-ring"></span><span class="pod-glow"></span>
+                  <span class="pod-disc"><img src="assets/agents/planner.png" alt="Planner agent" /></span>
+                  <span class="pod-shadow"></span>
+                </div>
+                <span class="pod-name">Planner</span>
+              </div>
+              <div class="bot-pod" data-id="researcher">
+                <div class="pod-inner">
+                  <span class="pod-ring"></span><span class="pod-glow"></span>
+                  <span class="pod-disc"><img src="assets/agents/researcher.png" alt="Researcher agent" /></span>
+                  <span class="pod-shadow"></span>
+                </div>
+                <span class="pod-name">Researcher</span>
+              </div>
+              <div class="bot-pod" data-id="builder">
+                <div class="pod-inner">
+                  <span class="pod-ring"></span><span class="pod-glow"></span>
+                  <span class="pod-disc"><img src="assets/agents/builder.png" alt="Builder agent" /></span>
+                  <span class="pod-shadow"></span>
+                </div>
+                <span class="pod-name">Builder</span>
+              </div>
+              <div class="bot-pod" data-id="critic">
+                <div class="pod-inner">
+                  <span class="pod-ring"></span><span class="pod-glow"></span>
+                  <span class="pod-disc"><img src="assets/agents/critic.png" alt="Critic agent" /></span>
+                  <span class="pod-shadow"></span>
+                </div>
+                <span class="pod-name">Critic</span>
+              </div>
+            </div>
+          </div>
+          <div class="swarm-feed" id="swarm-feed"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS -->
+    <section class="metrics">
+      <div class="metric">
+        <div class="metric-num" data-target="5">0</div>
+        <div class="metric-label">specialist agent roles<br />working in concert</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num" data-target="50" data-prefix="&lt;" data-suffix="ms">0</div>
+        <div class="metric-label">message routing<br />between agents</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num" data-target="24" data-suffix="/7">0</div>
+        <div class="metric-label">always-on autonomous<br />reasoning</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num" data-target="100" data-suffix="%">0</div>
+        <div class="metric-label">runs in your own<br />cloud & perimeter</div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="section">
+      <div class="section-head">
+        <span class="eyebrow">Products</span>
+        <h2>Intelligence, productized.</h2>
+        <p>Four agentic systems that replace workflows you used to do by hand.</p>
+      </div>
+      <div class="product-grid">
+        <article class="card glass tilt" data-accent="violet">
+          <div class="card-glow"></div>
+          <div class="card-icon">◈</div>
+          <h3>Swarm OS</h3>
+          <p>An operating system for agent fleets. Spin up specialized agents that negotiate, delegate, and self-heal — no orchestration code required.</p>
+          <ul class="feat-list">
+            <li>Auto-decomposed task graphs</li>
+            <li>Consensus + critic loops</li>
+            <li>Replayable agent memory</li>
+          </ul>
+          <a class="card-link" href="#cta">Explore Swarm OS →</a>
+        </article>
+
+        <article class="card glass tilt" data-accent="cyan">
+          <div class="card-glow"></div>
+          <div class="card-icon">⬡</div>
+          <h3>Continuum</h3>
+          <p>Persistent, embodied agents that live alongside your tools. They watch context, anticipate the next move, and act before you ask.</p>
+          <ul class="feat-list">
+            <li>Always-on ambient reasoning</li>
+            <li>Cross-app tool calling</li>
+            <li>Private on-device recall</li>
+          </ul>
+          <a class="card-link" href="#cta">Explore Continuum →</a>
+        </article>
+
+        <article class="card glass tilt" data-accent="magenta">
+          <div class="card-glow"></div>
+          <div class="card-icon">⟁</div>
+          <h3>Foundry</h3>
+          <p>Describe an outcome. Foundry assembles a team of agents, builds the software, tests it, and ships it — while you watch the diff.</p>
+          <ul class="feat-list">
+            <li>Intent-to-product pipelines</li>
+            <li>Self-reviewing code agents</li>
+            <li>One-click deploy</li>
+          </ul>
+          <a class="card-link" href="#cta">Explore Foundry →</a>
+        </article>
+
+        <article class="card glass tilt" data-accent="amber">
+          <div class="card-glow"></div>
+          <div class="card-icon">✦</div>
+          <h3>Oracle</h3>
+          <p>A research swarm that reads everything, verifies sources against each other, and returns a cited, adversarially-checked answer.</p>
+          <ul class="feat-list">
+            <li>Multi-source fan-out</li>
+            <li>Adversarial fact-checking</li>
+            <li>Always cited, never confident-wrong</li>
+          </ul>
+          <a class="card-link" href="#cta">Explore Oracle →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- SWARM EXPLAINER -->
+    <section id="swarm" class="section swarm-section">
+      <div class="section-head">
+        <span class="eyebrow">The Swarm</span>
+        <h2>Agents that talk to each other.</h2>
+        <p>Every iagentz product runs on the same substrate: specialized agents that pass messages, debate, and converge — like a team, not a tool.</p>
+      </div>
+      <div class="swarm-roles">
+        <div class="role glass" data-role="planner"><span class="role-avatar"><img src="assets/agents/planner.png" alt="Planner" /></span><span class="role-dot"></span>Planner<small>decomposes intent</small></div>
+        <div class="role glass" data-role="researcher"><span class="role-avatar"><img src="assets/agents/researcher.png" alt="Researcher" /></span><span class="role-dot"></span>Researcher<small>gathers ground truth</small></div>
+        <div class="role glass" data-role="builder"><span class="role-avatar"><img src="assets/agents/builder.png" alt="Builder" /></span><span class="role-dot"></span>Builder<small>writes & executes</small></div>
+        <div class="role glass" data-role="critic"><span class="role-avatar"><img src="assets/agents/critic.png" alt="Critic" /></span><span class="role-dot"></span>Critic<small>adversarially verifies</small></div>
+        <div class="role glass" data-role="orchestrator"><span class="role-avatar"><img src="assets/agents/orchestrator.png" alt="Orchestrator" /></span><span class="role-dot"></span>Orchestrator<small>routes & resolves</small></div>
+      </div>
+
+      <!-- Cinematic real-agent showcase -->
+      <div class="showcase glass">
+        <img src="assets/agents/hero-swarm.jpg" alt="A fleet of iagentz AI agents collaborating around shared context" />
+        <div class="showcase-scrim"></div>
+        <div class="showcase-copy">
+          <span class="eyebrow">One mind · many agents</span>
+          <h2>Your fleet, working as one.</h2>
+          <p>Specialist agents share a live context fabric and converge on outcomes together — reasoning out loud, in real time.</p>
+          <div class="showcase-stats">
+            <span><b>5</b> roles</span>
+            <span><b>∞</b> instances</span>
+            <span><b>0</b> prompts to babysit</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM / CAPABILITIES -->
+    <section id="platform" class="section">
+      <div class="section-head">
+        <span class="eyebrow">Platform</span>
+        <h2>Built for the post-prompt era.</h2>
+      </div>
+      <div class="bento">
+        <div class="bento-cell glass big">
+          <h3>Liquid memory</h3>
+          <p>Agents share a continuous, versioned memory fabric. Context flows between them like water — no copy-paste, no lost state.</p>
+          <div class="mem-viz"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="bento-cell glass">
+          <h3>Tool-native</h3>
+          <p>Every agent can call any API, browse, run code, and operate real software.</p>
+        </div>
+        <div class="bento-cell glass">
+          <h3>Sub-50ms routing</h3>
+          <p>A real-time message bus moves intent between agents faster than you can blink.</p>
+        </div>
+        <div class="bento-cell glass">
+          <h3>Sovereign &amp; private</h3>
+          <p>Run the swarm on your own cloud. Your data never leaves your perimeter.</p>
+        </div>
+        <div class="bento-cell glass wide">
+          <h3>Self-improving</h3>
+          <p>Critic agents grade every outcome and feed corrections back into the fleet. The swarm gets sharper the more you use it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section id="manifesto" class="section manifesto">
+      <div class="manifesto-inner glass">
+        <span class="eyebrow">Manifesto</span>
+        <h2>The chatbox was the dial-up of AI.</h2>
+        <p>
+          We believe intelligence shouldn't be summoned one question at a time. It should be
+          ambient, autonomous, and accountable — a workforce of agents that understands your
+          intent and moves the world toward it. iagentz exists to make that the default way
+          humanity consumes AI.
+        </p>
+        <p class="signed">— the iagentz collective</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="section cta">
+      <div class="cta-card glass">
+        <div class="card-glow"></div>
+        <h2>Get on the swarm.</h2>
+        <p>Early access is rolling out to builders and teams. Tell us what you'd unleash agents on.</p>
+        <form class="cta-form" id="cta-form">
+          <input type="email" placeholder="you@company.com" required aria-label="Email" />
+          <button type="submit" class="btn btn-primary">Request access</button>
+        </form>
+        <p class="cta-note" id="cta-note">No spam. We'll reach out when your tier opens.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">iagentz<span class="brand-dot">.ai</span></span>
+      </div>
+      <div class="footer-cols">
+        <div><h4>Products</h4><a href="#products">Swarm OS</a><a href="#products">Continuum</a><a href="#products">Foundry</a><a href="#products">Oracle</a></div>
+        <div><h4>Company</h4><a href="#manifesto">Manifesto</a><a href="#cta">Careers</a><a href="#cta">Press</a></div>
+        <div><h4>Connect</h4><a href="#">X / Twitter</a><a href="#">GitHub</a><a href="#cta">Contact</a></div>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 iagentz.ai — the agentic layer for everything.</span>
+      <span class="footer-status"><span class="pulse-dot green"></span> all systems autonomous</span>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
