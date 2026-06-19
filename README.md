@@ -1,33 +1,36 @@
 # iagentz.ai
 
-Marketing site for **iagentz.ai** — AI agents that work as a team. A system of
-specialized agents (Planner, Researcher, Builder, Critic, Orchestrator) that plan,
-research, build, and review together instead of waiting for the next prompt.
+Marketing site for **iagentz.ai** — custom-trained autonomous AI agents that live
+in your stack. Memory, logic, and action layers, not chatbots. The site covers the
+platform (Discover / Build / Govern / Optimize), Skill Shadowing, the Human
+Operating System, and a healthcare-focused FAQ (EHR, HIPAA, clinical agents).
 
 ## Stack
 
-Zero dependencies, zero build step. Plain static HTML/CSS/JS — open `index.html`
-in any browser or deploy the folder to any static host.
+- **React 19** + **Vite** — static single-page app, client-rendered.
+- **Tailwind CSS v4** (`@tailwindcss/vite`) with an OKLCH dark cyan/magenta theme.
+- Zero backend. `npm run build` emits a fully static `dist/` for any CDN.
 
-- `index.html` — markup
-- `styles.css` — "premium glass" design system (glassmorphism, refined palette)
-- `main.js` — live 3D agent swarm (canvas), animated message feed, scroll reveals,
-  count-up metrics, form handling
-- `assets/agents/` — agent imagery (avatars + cinematic hero scene)
-- `refdocs/` — source reference images
+```
+index.html        # Vite entry (head meta, fonts, #root)
+src/main.tsx       # React entry
+src/App.tsx        # the landing page + all sections
+src/styles.css     # Tailwind v4 theme + custom utilities/animations
+src/assets/        # bundled imagery
+.github/workflows/ # CI: build + deploy to AWS S3/CloudFront
+```
 
 ## Develop
 
-No tooling required. To preview locally:
-
 ```bash
-# any static server, e.g.
-python -m http.server 8000
-# then open http://localhost:8000
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # -> dist/
+npm run preview    # serve the production build
 ```
 
-## Design
+## Deploy
 
-Aesthetic: premium glass — frosted-glass surfaces, a disciplined violet + cyan
-accent palette, soft glows, slow motion, and photoreal agent imagery. Responsive
-down to mobile; respects `prefers-reduced-motion`.
+Pushes to `main` build and deploy to AWS S3 + CloudFront via GitHub Actions.
+Full one-time AWS setup, GitHub secrets, and GoDaddy DNS instructions are in
+[DEPLOY.md](./DEPLOY.md).

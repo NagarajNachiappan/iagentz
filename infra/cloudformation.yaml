@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  iagentz.ai static site hosting: private S3 bucket served by CloudFront via
+  Origin Access Control, an ACM certificate (DNS-validated), and an IAM user
+  for GitHub Actions deploys. Deploy this stack in us-east-1 (CloudFront
+  requires its ACM cert there).
+
+# ---------------------------------------------------------------------------
+# IMPORTANT — deploy in us-east-1:
+#   aws cloudformation deploy \
+#     --region us-east-1 \
+#     --stack-name iagentz-site \
+#     --template-file infra/cloudformation.yaml \
+#     --capabilities CAPABILITY_NAMED_IAM
+#
+# The stack PAUSES while creating the Certificate. As soon as the cert appears
+# in the ACM console (a few seconds in), open it, copy the 2 DNS validation
+# CNAME records, and add them at GoDaddy. Once they resolve, ACM issues the
+# cert and CloudFormation finishes the rest automatically.
+# ---------------------------------------------------------------------------
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: iagentz.ai
+    Description: Apex domain. The stack also wires up www.<DomainName>.
+
+  PriceClass:
+    Type: String
+    Default: PriceClass_100
+    AllowedValues: [PriceClass_100, PriceClass_200, PriceClass_All]
+    Description: CloudFront price class (100 = NA + EU, cheapest).
+
+Resources:
+  # --- S3 bucket (private; CloudFront reads it via OAC) ---------------------
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${SiteBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  # --- ACM certificate (DNS validation; add records at GoDaddy) ------------
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Sub "www.${DomainName}"
+      ValidationMethod: DNS
+
+  # --- Origin Access Control (CloudFront -> private S3) --------------------
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # --- CloudFront distribution --------------------------------------------
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: iagentz.ai static site
+        DefaultRootObject: index.html
+        PriceClass: !Ref PriceClass
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Aliases:
+          - !Ref DomainName
+          - !Sub "www.${DomainName}"
+        Origins:
+          - Id: s3origin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !Ref OriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: s3origin
+          ViewerProtocolPolicy: redirect-to-https
+          Compress: true
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          # AWS managed "CachingOptimized" policy
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 10
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 10
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+  # --- IAM user for GitHub Actions deploys ---------------------------------
+  DeployUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: iagentz-deploy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt SiteBucket.Arn
+              - Effect: Allow
+                Action: [s3:PutObject, s3:DeleteObject]
+                Resource: !Sub "${SiteBucket.Arn}/*"
+              - Effect: Allow
+                Action: cloudfront:CreateInvalidation
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  DeployAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref DeployUser
+
+Outputs:
+  BucketName:
+    Description: Set this as the GitHub Actions variable S3_BUCKET
+    Value: !Ref SiteBucket
+  DistributionId:
+    Description: Set this as the GitHub Actions variable CLOUDFRONT_DISTRIBUTION_ID
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Description: Point the GoDaddy "www" CNAME at this value
+    Value: !GetAtt Distribution.DomainName
+  CertificateArn:
+    Value: !Ref Certificate
+  DeployAccessKeyId:
+    Description: GitHub secret AWS_ACCESS_KEY_ID
+    Value: !Ref DeployAccessKey
+  DeploySecretAccessKey:
+    Description: GitHub secret AWS_SECRET_ACCESS_KEY (sensitive — store it now)
+    Value: !GetAtt DeployAccessKey.SecretAccessKey

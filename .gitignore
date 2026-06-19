@@ -10,6 +10,13 @@ desktop.ini
 *.log
 node_modules/
 
+# build output
+dist/
+.vite/
+
+# extracted source export (temp)
+_anp_extract/
+
 # gstack tooling
 .gstack/
 iagentz.zip

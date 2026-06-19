@@ -1,0 +1,159 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Futuristic dark palette */
+  --background: oklch(0.13 0.012 250);
+  --foreground: oklch(0.985 0 0);
+
+  --card: oklch(0.17 0.013 250);
+  --card-foreground: oklch(0.985 0 0);
+
+  --popover: oklch(0.17 0.013 250);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.85 0.18 195);            /* cyan glow */
+  --primary-foreground: oklch(0.13 0.012 250);
+
+  --secondary: oklch(0.22 0.015 250);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.22 0.015 250);
+  --muted-foreground: oklch(0.7 0.012 250);
+
+  --accent: oklch(0.78 0.16 320);              /* magenta accent */
+  --accent-foreground: oklch(0.13 0.012 250);
+
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.85 0.18 195 / 60%);
+
+  /* Bespoke tokens */
+  --grad-chrome: linear-gradient(180deg, oklch(1 0 0) 20%, oklch(0.7 0.01 250 / 0.3) 100%);
+  --grad-aurora: radial-gradient(60% 60% at 30% 20%, oklch(0.85 0.18 195 / 0.25), transparent 70%),
+                 radial-gradient(50% 50% at 80% 70%, oklch(0.78 0.16 320 / 0.18), transparent 70%);
+  --glow-primary: 0 0 40px oklch(0.85 0.18 195 / 0.45);
+  --glow-soft: 0 0 80px oklch(0.85 0.18 195 / 0.2);
+}
+
+.dark {
+  /* same — site is always dark */
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@utility chrome-text {
+  background: var(--grad-chrome);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@utility glass-panel {
+  background: linear-gradient(
+    180deg,
+    oklch(1 0 0 / 0.04),
+    oklch(1 0 0 / 0.01)
+  );
+  backdrop-filter: blur(14px);
+  border: 1px solid oklch(1 0 0 / 0.08);
+}
+
+@utility aurora-bg {
+  background-image: var(--grad-aurora);
+}
+
+@utility glow-primary {
+  box-shadow: var(--glow-primary);
+}
+
+@keyframes fluid-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5%, 10%) scale(1.1); }
+  66% { transform: translate(-3%, 5%) scale(0.95); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(2400%); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes orb-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@utility animate-fluid-drift {
+  animation: fluid-drift 22s ease-in-out infinite;
+}
+@utility animate-scanline {
+  animation: scanline 4s linear infinite;
+}
+@utility animate-float-y {
+  animation: float-y 6s ease-in-out infinite;
+}
+@utility animate-orb-spin {
+  animation: orb-spin 40s linear infinite;
+}
